@@ -118,10 +118,9 @@ def calculate_group_replacements(aantal_objecten, gemiddelde_leefdtijd, stdev_le
     plt.step(t_waarden, working_values, where='post')
     
     
-    plt.xlabel("Tijd (jaren)")
-    plt.ylabel("Aantal werkende objecten")
-    plt.title("Uitval en groepsvervangingen op basis van 2000 simulaties")
-    #plt.legend()
+    plt.xlabel("Tijd (jaren)", fontsize=14)
+    plt.ylabel("Aantal werkende objecten", fontsize=14)
+    plt.title("Uitval en groepsvervangingen op basis van 2000 simulaties", fontsize=20)
     plt.grid()
     
     # Grid van gemiddelde levensduur op de x-as

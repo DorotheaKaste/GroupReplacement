@@ -64,24 +64,34 @@ def get_number_input(label, default):
         return None
 
 # PDF table helper
-def add_table_to_pdf(pdf, dataframe):
+def add_table_to_pdf(pdf, df_table):
     pdf.set_font("Arial", size=10)
     col_width = 10
     row_height = 6
-    pdf.ln(5)
-
-    # Table header
-    pdf.set_fill_color(200, 200, 200)
-    for col in dataframe.columns: #for col>16 cut off and place below
-        pdf.cell(col_width, row_height, col, border=1, fill=True)
-    pdf.ln(row_height)
-
-    # Table rows
-    for i in range(len(dataframe)):
-        for item in dataframe.iloc[i]:
-            formatted = f"{item:.1f}" if isinstance(item, float) else str(item)
-            pdf.cell(col_width, row_height, formatted, border=1)
+    
+    
+    marker=True
+    while marker:
+        if len(df_table.columns)>16:
+            df_16 = df_table.iloc[:, 0:16]
+            df_table = df_table.iloc[:, 16:]
+        else:
+            df_16 = df_table
+            marker = False
+        
+        # Table columns (header)
+        pdf.ln(5)
+        pdf.set_fill_color(200, 200, 200)
+        for col in df_16.columns: 
+            pdf.cell(col_width, row_height, col, border=1, fill=True)
         pdf.ln(row_height)
+    
+        # Table rows
+        for i in range(len(df_16)):
+            for item in df_16.iloc[i]:
+                formatted = f"{item:.1f}" if isinstance(item, float) else str(item)
+                pdf.cell(col_width, row_height, formatted, border=1)
+            pdf.ln(row_height)
 
 # Main app
 # maakt de witte randen wat kleiner
@@ -217,22 +227,29 @@ if berekening:
             pdf.multi_cell(0, 6, introduction_calculation)
             pdf.ln(5)
             pdf.multi_cell(0, 6, introduction_input, align="L")
-            pdf.ln(5)  # space before inputs or plot
+            pdf.ln(3)  # space before inputs or plot
             
             pdf.set_font("Arial", size=12)
-            pdf.cell(0, 10, f"{label_soort_object}: {soort_object}", ln=True)
-            pdf.cell(0, 10, f"{label_aantal_objecten}: {aantal_objecten}", ln=True)
-            pdf.cell(0, 10, f"{label_gemiddelde_leefdtijd}: {gemiddelde_leefdtijd}", ln=True)
-            pdf.cell(0, 10, f"{label_stdev_leefdtijd}: {stdev_leefdtijd}", ln=True)
-            pdf.cell(0, 10, f"{label_faalpercentage}: {faalpercentage}", ln=True)
-            pdf.cell(0, 10, f"{label_tijdshorizon}: {tijdshorizon}", ln=True)
-            pdf.cell(0, 10, f"{label_vervangingskosten_object}: {vervangingskosten_object}", ln=True)
-            pdf.cell(0, 10, f"{label_rentevoet}: {rentevoet}", ln=True)
-            pdf.cell(0, 10, f"{label_N_sim}: {N_sim}", ln=True)
-            
+            pdf.cell(0, 8, f"{label_soort_object}: {soort_object}", ln=True)
+            pdf.cell(0, 8, f"{label_aantal_objecten}: {aantal_objecten}", ln=True)
+            pdf.cell(0, 8, f"{label_gemiddelde_leefdtijd}: {gemiddelde_leefdtijd}", ln=True)
+            pdf.cell(0, 8, f"{label_stdev_leefdtijd}: {stdev_leefdtijd}", ln=True)
+            pdf.cell(0, 8, f"{label_faalpercentage}: {faalpercentage}", ln=True)
+            pdf.cell(0, 8, f"{label_tijdshorizon}: {tijdshorizon}", ln=True)
+            pdf.cell(0, 8, f"{label_vervangingskosten_object}: {vervangingskosten_object}", ln=True)
+            pdf.cell(0, 8, f"{label_rentevoet}: {rentevoet}", ln=True)
+            pdf.cell(0, 8, f"{label_N_sim}: {N_sim}", ln=True)
+                        
             # add disclaimer
             pdf.ln(5)
             pdf.multi_cell(0, 6, disclaimer, align="L",border=1)
+            
+            #print resultaten
+            pdf.set_font("Arial", "B", size=14)
+            pdf.multi_cell(0, 6, "Resultaten")
+            pdf.set_font("Arial", size=12)
+            pdf.ln(5)
+            pdf.multi_cell(0, 6, f"Omvang groepsvervanging: {n_vervangen} objecten")
             
             # Plot image
             pdf.ln(5)
@@ -243,7 +260,7 @@ if berekening:
             pdf.ln(5)
             pdf.set_font("Arial", 'B', 12)
             pdf.cell(0, 10, "Gemiddelde tijdstippen van groepsvervanging (jaren):", ln=True)
-            #add_table_to_pdf(pdf, table_results)
+            add_table_to_pdf(pdf, table_results)
             
             #test table in plot
 
