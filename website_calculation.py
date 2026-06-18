@@ -213,8 +213,8 @@ if berekening:
             pdf.add_page()
             
             # Set font for the title
-            pdf.set_font("Arial", "B", 16)
-            pdf.multi_cell(0, 10, page_header, align="L")
+            pdf.set_font("Arial", "B", 18)
+            pdf.multi_cell(150, 10, page_header, align="L")
     
             pdf.ln(5)  # add some vertical space
     
